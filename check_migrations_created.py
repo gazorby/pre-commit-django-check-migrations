@@ -14,14 +14,15 @@ def main():
         # NOT get used when calling poetry or pipenv
         pre_command = 'unset VIRTUAL_ENV; '
 
-    output = subprocess.check_output(
-        f'{pre_command}{args.exec_command} {args.manage_path} makemigrations --dry-run',
-        shell=True
-    ).decode('utf-8')
-    if output.strip() == 'No changes detected':
-        return 0
-    print('\033[91mMigrations were not created!\033[0m')
-    return 1
+    try:
+        subprocess.run(
+            f'{pre_command}{args.exec_command} {args.manage_path} makemigrations --dry-run --check',
+            shell=True,
+            stderr=subprocess.STDOUT
+        )
+    except subprocess.CalledProcessError as e:
+        print('\033[91mMigrations were not created!\033[0m')
+        return 1
 
 
 if __name__ == '__main__':
