@@ -18,7 +18,6 @@ def main():
         subprocess.run(
             f'{pre_command}{args.exec_command} {args.manage_path} makemigrations --dry-run --check',
             shell=True,
-            stderr=subprocess.STDOUT
         )
     except subprocess.CalledProcessError as e:
         print('\033[91mMigrations were not created!\033[0m')
